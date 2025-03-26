@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闪电云盘 - 更新日志</title>
+<style>
+/* 定义全局变量，方便统一管理颜色 */
+:root {
+    --primary: #1998ff;        /* 现代化主色调 */
+    --primary-hover: #3a56d4;
+    --success: #5ed6b3;        /* 成功色 */
+    --success-hover: #4aba9a;
+    --warning: #ffad00;        /* 警告色 */
+    --danger: #ff4444;         /* 危险色 */
+    --danger-hover: #dd3333;
+    --dark: #343a40;           /* 深色 */
+    --light: #f8f9fa;          /* 浅色 */
+    --gray: #6c757d;           /* 灰色 */
+    --white: #ffffff;          /* 白色 */
+    --body-bg: #f9fafc;        /* 页面背景色 */
+    --border: #e0e0e0;         /* 边框色 */
+    --shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* 阴影 */
+    --card-bg: rgba(255, 255, 255, 0.95);     /* 卡片背景色 */
+    --text-color: #4a5567;                    /* 文本颜色 */
+    --version-section-bg: #f8f9fa;            /* 版本区域背景色 */
+    --author-message-bg: linear-gradient(135deg, #f5f7fa 0%, #e4ecfb 100%); /* 作者消息背景 */
+}
+
+/* 暗黑模式变量 */
+[data-theme="dark"] {
+    --primary: #2fa8ff;
+    --primary-hover: #4a66e4;
+    --success: #6ee6c3;
+    --success-hover: #5acaaa;
+    --dark: #e4e6eb;
+    --light: #292929;
+    --gray: #a0a0a0;
+    --white: #1e1e1e;
+    --body-bg: #121212;
+    --border: #444444;
+    --shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    --card-bg: rgba(30, 30, 30, 0.95);
+    --text-color: #e0e0e0;
+    --version-section-bg: #242424;
+    --author-message-bg: linear-gradient(135deg, #252525 0%, #202338 100%);
+}
+
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', '微软雅黑', system-ui, sans-serif; /* 优化中文字体 */
+}
+
+/* 页面背景和内边距 */
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 版本容器样式 */
+.version-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+/* 版本头部样式 */
+.version-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    position: relative;
+}
+
+/* 版本标题样式 */
+.version-header h1 {
+    font-size: 3.5rem;
+    background: linear-gradient(45deg, var(--primary), #6e8ffa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 版本卡片样式 */
+.version-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+/* 版本卡片悬停效果 */
+.version-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(25, 152, 255, 0.2);
+}
+
+/* 版本卡片顶部渐变条 */
+.version-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, #6e8ffa 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.version-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* 版本标题样式 */
+.version-title {
+    color: var(--dark);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+/* 版本标题前的圆点 */
+.version-title::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: 3px solid white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 版本卡片悬停时圆点效果 */
+.version-card:hover .version-title::before {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 15px rgba(25, 152, 255, 0.5);
+}
+
+/* 版本内容区域样式 */
+.version-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: var(--version-section-bg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.version-section:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* 版本内容标题样式 */
+.version-section h4 {
+    font-size: 1.2rem;
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 新功能标题样式 */
+.new-features h4 {
+    background: linear-gradient(to right, var(--success), var(--success-hover));
+}
+
+/* 问题修复标题样式 */
+.bug-fixes h4 {
+    background: linear-gradient(to right, var(--danger), var(--danger-hover));
+}
+
+/* 列表样式 */
+ol {
+    list-style: none;
+    counter-reset: list-counter;
+    padding: 0;
+}
+
+/* 列表项样式 */
+ol li {
+    counter-increment: list-counter;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 列表项悬停效果 */
+ol li:hover {
+    background-color: rgba(25, 152, 255, 0.05);
+    transform: translateX(10px);
+}
+
+/* 列表项前的箭头 */
+ol li::before {
+    content: "➤";
+    color: var(--primary);
+    margin-right: 1rem;
+    font-size: 1.2em;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+ol li:hover::before {
+    transform: translateX(3px);
+    color: var(--primary-hover);
+}
+
+/* 作者有话说样式 */
+.author-message {
+    background: var(--author-message-bg);
+    border-left: 5px solid var(--primary);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin: 0 0 2.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    overflow: hidden;
+}
+
+.author-message:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.author-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(135deg, transparent 0%, rgba(25, 152, 255, 0.05) 100%);
+    z-index: 0;
+}
+
+.author-message h4 {
+    background: linear-gradient(45deg, var(--primary), #6e8ffa);
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(25, 152, 255, 0.2);
+    font-weight: 600;
+}
+
+.author-message p {
+    padding: 0.5rem 0;
+    font-style: italic;
+    color: var(--text-color);
+    position: relative;
+    z-index: 1;
+}
+
+/* 背景装饰元素样式 */
+.hero-bg-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.circle-1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(25, 152, 255, 0.1), rgba(110, 143, 250, 0.1));
+    top: 10%;
+    left: 5%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.circle-2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(94, 214, 179, 0.1), rgba(74, 186, 154, 0.1));
+    bottom: 10%;
+    right: 5%;
+    animation: float 10s ease-in-out infinite alternate;
+}
+
+.square-1 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(255, 173, 0, 0.1), rgba(255, 68, 68, 0.05));
+    top: 40%;
+    right: 15%;
+    transform: rotate(45deg);
+    animation: rotate 15s linear infinite;
+}
+
+.dots-1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-image: radial-gradient(rgba(25, 152, 255, 0.15) 2px, transparent 2px);
+    background-size: 30px 30px;
+    top: 60%;
+    left: 10%;
+    opacity: 0.5;
+    animation: fade 5s ease-in-out infinite alternate;
+}
+
+/* 暗模式下调整背景装饰元素的透明度 */
+[data-theme="dark"] .hero-bg-elements div {
+    opacity: 0.4;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(45deg);
+    }
+    100% {
+        transform: rotate(405deg);
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    .version-header h1 {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .version-container {
+        padding: 0 15px;
+    }
+
+    .version-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .version-title {
+        font-size: 1.5rem;
+    }
+
+    .version-card {
+        padding: 1.5rem;
+    }
+    
+    .author-message {
+        padding: 1.2rem;
+        font-size: 1rem;
+    }
+    
+    .author-message h4 {
+        font-size: 1.1rem;
+        padding: 0.6rem 1rem;
+    }
+    
+    ol li::before {
+        font-size: 1em;
+    }
+}
+
+/* 滚动平滑效果 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 页面元素进入动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.version-card {
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.version-card:nth-child(1) { animation-delay: 0.1s; }
+.version-card:nth-child(2) { animation-delay: 0.2s; }
+.version-card:nth-child(3) { animation-delay: 0.3s; }
+.version-card:nth-child(4) { animation-delay: 0.4s; }
+.version-card:nth-child(5) { animation-delay: 0.5s; }
+.version-card:nth-child(6) { animation-delay: 0.6s; }
+.version-card:nth-child(7) { animation-delay: 0.7s; }
+.version-card:nth-child(8) { animation-delay: 0.8s; }
+.version-card:nth-child(9) { animation-delay: 0.9s; }
+.version-card:nth-child(10) { animation-delay: 1s; }
+
+.author-message {
+    animation: fadeInUp 0.6s ease-out backwards;
+    animation-delay: 0.05s;
+}
+
+/* 暗色模式切换按钮 */
+.theme-switch-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider:after {
+    color: white;
+    display: block;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: .4s;
+}
+
+input:not(:checked) + .slider:after {
+    content: "☀️";
+    right: 10px;
+}
+
+input:checked + .slider:after {
+    content: "🌙";
+    left: 10px;
+}
+
+/* 版本树形导航样式 */
+.version-tree-nav {
+    position: fixed;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--primary);
+    
+    /* 隐藏滚动条但保留功能 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* 隐藏WebKit浏览器的滚动条 */
+.version-tree-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* 导航标题样式 */
+.version-tree-nav h3 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(25, 152, 255, 0.2);
+}
+
+/* 导航列表样式 */
+.version-tree-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 导航项样式 */
+.version-tree-nav li {
+    margin-bottom: 8px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* 导航链接样式 */
+.version-tree-nav li a {
+    display: block;
+    padding: 10px 12px;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+}
+
+/* 导航链接悬停效果 */
+.version-tree-nav li a:hover {
+    background: rgba(25, 152, 255, 0.1);
+    color: var(--primary);
+    transform: translateX(5px);
+    border-color: rgba(25, 152, 255, 0.2);
+}
+
+/* 高亮当前活动链接 */
+.version-tree-nav li a.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(25, 152, 255, 0.3);
+    transform: translateX(5px);
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .version-tree-nav {
+    background: rgba(30, 30, 30, 0.8);
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .version-tree-nav li a {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .version-tree-nav li a:hover {
+    background: rgba(25, 152, 255, 0.15);
+}
+
+/* 隐藏页面所有滚动条 */
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* 移动端适配 - 修复导航挤压内容问题 */
+@media (max-width: 768px) {
+    /* 重置桌面端导航样式 */
+    .version-tree-nav {
+        left: auto;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        max-height: 50px;
+        overflow: hidden;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 4px 15px rgba(25, 152, 255, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 展开后的样式 */
+    .version-tree-nav.expanded {
+        width: 80%;
+        max-width: 300px;
+        height: auto;
+        max-height: 70vh;
+        border-radius: 12px;
+        background: var(--card-bg);
+        padding: 15px;
+        overflow-y: auto;
+        display: block;
+    }
+    
+    /* 导航标题在折叠状态下显示为图标 */
+    .version-tree-nav h3 {
+        margin: 0;
+        padding: 0;
+        font-size: 0;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .version-tree-nav h3::before {
+        content: '📋';
+        font-size: 20px;
+        color: white;
+    }
+    
+    /* 展开后显示正常标题 */
+    .version-tree-nav.expanded h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(25, 152, 255, 0.2);
+        color: var(--primary);
+        display: block;
+        height: auto;
+    }
+    
+    .version-tree-nav.expanded h3::before {
+        display: none;
+    }
+    
+    /* 折叠状态下隐藏列表 */
+    .version-tree-nav ul {
+        display: none;
+    }
+    
+    /* 展开后显示列表 */
+    .version-tree-nav.expanded ul {
+        display: block;
+    }
+    
+    /* 确保移动端链接居中且有足够点击区域 */
+    .version-tree-nav.expanded li a {
+        text-align: center;
+        padding: 12px 10px;
+        margin: 5px 0;
+        font-size: 16px;
+        transform: none;
+    }
+    
+    .version-tree-nav.expanded li a:hover {
+        transform: none;
+    }
+    
+    /* 移动端点击效果优化 */
+    .version-tree-nav.expanded li a:active {
+        background: var(--primary);
+        color: white;
+    }
+    
+    /* 确保内容区域不被导航挤压 */
+    .version-container {
+        width: 100% !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* 确保版本卡片宽度正确 */
+    .version-card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* 确保版本标题正确显示 */
+    .version-title {
+        text-align: center;
+    }
+    
+    /* 确保版本内容正确显示 */
+    .version-section {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+</style>
+</head>
+
+<!-- 1.8.0 版本 
+        <article class="version-card">
+            <h2 class="version-title">1.8.0（2025-3-15）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </section>
+        </article>-->
+
+<body>
+    <!-- 版本树形导航 -->
+<div class="version-tree-nav">
+    <h3>版本快速导航</h3>
+    <ul class="version-list">
+        <li><a href="#v2-1-0">v2.1.0 <span>（2025-4-1）</span></a></li>
+        <li><a href="#v2-0-0">v2.0.0 <span>（2025-3-20）</span></a></li>
+        <li><a href="#v1-9-0">v1.9.0 <span>（2025-3-20）</span></a></li>
+        <li><a href="#v1-8-0">v1.8.0 <span>（2025-3-15</span></a></li>
+        <li><a href="#v1-7-0">v1.7.0 <span>（2025-3-1）</span></a></li>
+        <li><a href="#v1-6-0">v1.6.0 <span>（2025-2-20）</span></a></li>
+        <li><a href="#v1-5-0">v1.5.0<span>（2024-10-1）</span></a></li>
+        <li><a href="#v1-4-0">v1.4.0<span>（2024-6-1）</span></a></li>
+        <li><a href="#v1-3-0">v1.3.0<span>（2024-5-15）</span></a></li>
+        <li><a href="#v1-2-0">v1.2.0<span>（2024-5-9）</span></a></li>
+        <li><a href="#v1-1-0">v1.1.0<span>（2024-5-1）</span></a></li>
+        <li><a href="#v1-0-4">v1.0.4<span>（2024-2-23）</span></a></li>
+        <li><a href="#v1-0-3">v1.0.3<span>（2023-12-1）</span></a></li>
+        <li><a href="#v1-0-2">v1.0.2<span>（2023-10-14）</span></a></li>
+        <li><a href="#v1-0-1">v1.0.1<span>（2023-05-1）</span></a></li>
+        <li><a href="#v1-0-0">v1.0.0<span>（2022-09-19）</span></a></li>
+    </ul>
+</div>
+
+    
+    <!-- 添加暗色模式切换开关 -->
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+        </label>
+    </div>
+     <!-- 添加背景装饰元素 -->
+    <div class="hero-bg-elements">
+        <div class="circle-1"></div>
+        <div class="circle-2"></div>
+        <div class="square-1"></div>
+        <div class="dots-1"></div>
+    </div>
+<div class="version-container">
+    <header class="version-header">
+        <h1>闪电云盘更新日志</h1>
+    </header>
+    <section class="author-message">
+    <h4>作者有话说 💬</h4>
+    <p>哈喽不知不觉已经过了三年啦，现在前端WEB/PC基本上差不多了，下面开始全部注意力转移手机端APP开发，敬请期待！</p>
+</section>
+    <section class="version-timeline">
+        
+        <!-- 2.1.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">2.1.0（2025-4-1）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>签到系统（包含每日/连续签到/总签到/不同奖励体系）</li>
+                    <li>兑换系统（积分和余额来兑换，比如虚拟物品/实体奖励）</li>
+                    <li>一件清除失效卡密</li>
+                    <li>下载页面文件图标（包括社交软件分享）</li>
+                    <li>文件预览（目前包含视频（独立视频模版播放器）/图片/音频/文本/PDF）后期还会加更多</li>
+                    <li>阿里云OSS存储直接上传不必经过服务器在上传到阿里云（后端可设置是上传到服务器在上传到阿里云，还是直接上传到阿里云OSS）</li>
+                    <li>QQ账号绑定</li>
+                    <li>一套下载页面模版一套文件夹分享页面模版/全新首页模版/全新交互系统/全新文件管理页面/</li>
+                    <li>安装包文件列表</li>
+                    <li>全新卡片视图</li>
+                    <li>手机端菜单侧栏</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>文件编辑页面自定义链接布局错误</li>
+                    <li>卡密搜索</li>
+                    <li>批量删除文件夹</li>
+                    <li>上传页面样式美化</li>
+                    <li>下载卡片移动端不适应</li>
+                    <li>上传逻辑优化</li>
+                    <li>用户关闭支付不主动关闭订单</li>
+                    <li>独立VIP开通页面不支付</li>
+                    <li>个人信息页面重做</li>
+                    <li>会员权益和独立会员开通页面结合</li>
+                    <li>数据库编码默认采用utf8mb4</li>
+                    <li>网站首页模版重构（更好的SEO）</li>
+                    <li>阿里云OSS直传不传输统计数据</li>
+                    <li>移动WEB适配</li>
+                </ol>
+            </section>
+        </article>
+        
+        <!-- 2.0.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">2.0.0（2025-3-20）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>全站广告可自定义开启或关闭（后续应该会写个对接广告系统，客户自己买广告到期自动下架）</li>
+                    <li>用户组上传限速（桀桀桀 好的不学尽学这恶心人的哈哈哈哈）</li>
+                    <li>阿里云OSS升级SDKv2.7.2</li>
+                    <li>分片上传（降低服务器压力）</li>
+                    <li>本地存储下载源链接有效期 3 小时（10800 秒）防止调用下载</li>
+                    <li>默认下载主题卡片式下载（蓝奏云下载主题不变化）</li>
+                    <li>文件下载记录（后端）</li>
+                    <li>文件下载限制当前IP每2分钟下载10次（防止盗刷流量）</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>QQ微信打开链接提示页面美化</li>
+                    <li>上传窗口文件上传完成后默认刷新修改成当前文件夹</li>
+                    <li>文件夹分享页面模版倒序</li>
+                    <li>旧主题美化样式</li>
+                    <li>文件夹页面广告全部改成顶部横幅</li>
+                    <li>阿里云存储策略最低限速改成30kb（阿里云最低限速为 30 KB/s 没办法更低了 官方这样设置的）</li>
+                    <li>回收站清空删除数据等待动画（防止用户以为卡住了）</li>
+                    <li>回收站列表删除时候残留数据</li>
+                    <li>批量删除按钮消失</li>
+                    <li>删除文件改成默认刷新当前文件夹</li>
+                    <li>手机端退出卡片默认只显示按钮（电脑端还是全部显示）</li>
+                    <li>卡密兑换页面美化</li>
+                    <li>阿里云生成下载链接设置 3 小时（10800 秒）有效期</li>
+                    <li>个人中心分享走势图</li>
+                    <li>保存到云盘逻辑（保存也增加用户容量，用户保存的文件不会删除分享者源文件了）</li>
+                </ol>
+            </section>
+        </article>
+        
+        <!-- 1.9.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.9.0（2025-3-20）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>QQ登录（终于等到你，还好我没放弃）虽然应该1.4版本就应该☝️加入的奈何作者是个拖拖拉拉的人～233</li>
+                    <li>自定义开启QQ/微信（不强制，当然你也可以都开启qwq爽歪歪～）</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>后端卡密系统分页数据显示</li>
+                    <li>登陆页面优化卡顿</li>
+                    <li>用户头像取消百分之50圆角</li>
+                    <li>后端首页用户统计</li>
+                    <li>取消分享用户注册变量（没啥用还会导致数据库查询变慢）</li>
+                </ol>
+            </section>
+        </article>
+        
+        <!-- 1.8.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.8.0（2025-3-15）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>卡密系统（适合只做发卡的群体）配套发卡小程序联系管理员获取（付费）</li>
+                    <li>发信邮箱模版样式</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>举报页面重做，更加沉浸式交互更加美观</li>
+                    <li>提取码输入框样式美化</li>
+                    <li>后端用户组颜色显示错误</li>
+                    <li>电脑端会员开通样式微调整</li>
+                    <li>用户中心修改按钮全屏悬浮</li>
+                    <li>后端删除用户不删除用户的财务记录</li>
+                </ol>
+            </section>
+        </article>
+        
+        <!-- 1.7.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.7.0（2025-3-1）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>阿里云上传违规文件检测/本地存储不检测</li>
+                    <li>首页弹窗和用户中心轮播文字公告不强制展示</li>
+                    <li>前端用户分享文件页面走势图（浏览/下载/总订单/成功订单/注册/金额/分成）等等</li>
+                    <li>后端用户设置会员到期时间</li>
+                    <li>一键关闭订单失效</li>
+                    <li>分享链接增加站点标题</li>
+                    <li>下载页面浏览量</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>美化全站弹窗样式</li>
+                    <li>美化后台首页</li>
+                    <li>美化用户中心会员显示样式更加醒目</li>
+                    <li>提取码页面开关冒泡样式</li>
+                    <li>用户中心新建文件夹样式</li>
+                    <li>退出登陆逻辑</li>
+                    <li>上传界面用户关闭页面提示/上传文件覆盖上传进度样式</li>
+                    <li>上传文件完成后和清空回收站容量不实时刷新</li>
+                    <li>后端统计走势图</li>
+                    <li>后端订单页面列表显示错误</li>
+                    <li>回收站页面点击开通会员弹窗不显示</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.6.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.6.0（2025-2-20）正式版</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>用户组总存储容量限制</li>
+                    <li>用户组单次上传文件数量限制</li>
+                    <li>阿里云oss存储下载链接签名验证（防止用户一直调用存储桶直链）</li>
+                    <li>后端用户列表显示当前用户已用存储容量</li>
+                    <li>后端其他管理员用户删除总管理员增加限制/不可删除</li>
+                    <li>选择某用户组用户第一次注册送会员时间</li>
+                    <li>后端删除某用户删除其用户所有数据（存储文件/数据库数据）直接永久灰飞烟灭！～</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>数据库缓存错误</li>
+                    <li>前后端/回收站/阿里云oss删除文件后存储桶源文件不删除</li>
+                    <li>本地下载浏览器不实时显示进度/剩余时间和当前文件总大小</li>
+                    <li>删除文件数据库分享代码不同步删除</li>
+                    <li>后端用户不能批量删除</li>
+                    <li>前端用户页面图片文字样式不同步/删除源图片缩略图（增加安全防止跨域盗刷流量）</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.5.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.5.0（2024-10-1）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>电脑端开通VIP新样式</li>
+                    <li>会员图标全局</li>
+                    <li>蓝奏云文件夹/下载页面模板(适配手机)</li>
+                    <li>独立会员开通页面</li>
+                    <li>分享赚钱攻略页面</li>
+                    <li>个人中心页面实名认证/余额提现（强制实名提现）</li>
+                    <li>个人中心权限页面</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>支付BUG</li>
+                    <li>广告布局</li>
+                    <li>登录样式</li>
+                    <li>下载页面分享者卡片布局</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.4.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">1.4.0（2024-6-1）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>分享赚钱描述页面</li>
+                    <li>个人中心/赚钱攻略</li>
+                    <li>手机端下载页面分享者卡片</li>
+                    <li>后台修改广告位（不同地方广告持续添加中）</li>
+                    <li>封IP禁止访问</li>
+                    <li>下载页图片弹窗广告</li>
+                    <li>个人中心侧栏缩放</li>
+                    <li>种子侧栏分类</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>手机端开通会员CSS布局</li>
+                    <li>部分JS失效</li>
+                    <li>文件分享页面文件时间不倒序</li>
+                    <li>下载页面CSS整合</li>
+                    <li>文件描述变量</li>
+                    <li>首页公告/客服弹窗，支持HTML代码</li>
+                    <li>用户组限速/不限速/禁止下载</li>
+                    <li>侧栏广告CSS大小样式</li>
+                    <li>个人中心布局大小CSS</li>
+                    <li>登录/注册/重置/找回页面ICO图标</li>
+                    <li>分享/错误404页面</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.3.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.3.0（2024-5-15）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>个人中心页面文字轮播/后台可设置</li>
+                    <li>收益页面/分成百分比</li>
+                    <li>会员可自定义分享链接（最大支持10位数/支持中文）</li>
+                    <li>微信官方支付接口</li>
+                    <li>下载页面头像个人中心/云盘入口</li>
+                    <li>微信登录（QQ登录估计下个版本更新）</li>
+                    <li>下载页面分享者名片框</li>
+                    <li>文件夹限速收益</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>全局文件名过长超出</li>
+                    <li>搜索框</li>
+                    <li>QQ号全局变量</li>
+                    <li>捐赠页面CSS</li>
+                    <li>登录界面布局等</li>
+                    <li>重置密码页面布局</li>
+                    <li>电脑端会员开通页面大小</li>
+                    <li>下载页面退出按钮不适配</li>
+                    <li>个人中心开通会员不适配</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.2.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.2.0（2024-5-9）</h2>
+            
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>后端公告不能修改BUG</li>
+                    <li>图片不显示BUG</li>
+                    <li>下载页面登录变量</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.1.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.1.0（2024-5-1）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>文件下载页面广告位</li>
+                    <li>支持在线查看相册、视频、音频、文档、压缩包等</li>
+                    <li>开通会员隐藏全站广告</li>
+                    <li>违规文件/用户一键处理</li>
+                    <li>防止自己存的文件被盗用随机ID外链</li>
+                    <li>新模板一套</li>
+                    <li>公告展示</li>
+                    <li>码支付</li>
+                    <li>捐赠页面</li>
+                    <li>上传显示文件图标</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>后端首页</li>
+                    <li>下载页开通会员不跳转</li>
+                    <li>电脑/手机端开通会员成功不刷新</li>
+                    <li>手机端开会员页面不适配</li>
+                    <li>文件页面图标不正确</li>
+                    <li>限制单次20个文件</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.0.4 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.0.4（2024-2-23）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>文件可一键保存到我的网盘述</li>
+                    <li>会员权益界面</li>
+                    <li>文件管理视图</li>
+                    <li>手机端菜单</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>全部布局增加适配移动端H5</li>
+                    <li>系统整体的架构安全度升级</li>
+                    <li>手机端文件页面不适配</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.0.3 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.0.3（2023-12-1）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>下载页面增加文件描述</li>
+                    <li>提取码页面自定义</li>
+                    <li>支持后台一键修改玩家是否是会员（可自定义会员天数</li>
+                    <li>用户推广赚钱</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>文件夹删除BUG</li>
+                    <li>下载页面不适配</li>
+                    <li>提取码页面不适配</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.0.2 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.0.2（2023-10-14）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>日志查看</li>
+                    <li>支付宝官方支付接口</li>
+                    <li>易支付</li>
+                    <li>一套全新首页模板</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>产生垃圾缓存</li>
+                    <li>上传失败，支持文件后缀大小写</li>
+                    <li>后台用户注册时间</li>
+                    <li>已知CSS布局</li>
+                    <li>文件上传大写格式错误BUG</li>
+                    <li>加载缓慢的，此由JS组件引起</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.0.1 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.0.1（2023-05-1）</h2>
+            
+            <section class="version-section new-features">
+                <h4>新增功能</h4>
+                <ol>
+                    <li>全局变量后台一键修改</li>
+                    <li>回收站保留文件</li>
+                    <li>违规文件/用户一键处理</li>
+                    <li>多种储存策略</li>
+                </ol>
+            </section>
+
+            <section class="version-section bug-fixes">
+                <h4>问题修复</h4>
+                <ol>
+                    <li>首页存在的左边被遮挡</li>
+                    <li>手机端下存在的展示不完整</li>
+                    <li>邮箱变量</li>
+                </ol>
+            </section>
+        </article>
+
+        <!-- 1.0.0 版本 -->
+        <article class="version-card">
+            <h2 class="version-title">v1.0.0（2022-09-19）</h2>
+            
+            <section class="version-section new-features">
+                <h4>闪电云盘内测</h4>
+                <ol>
+                    <li>第一版本</li>
+                </ol>
+            </section>
+        </article>
+    </section>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 定义要播放的文本
+    const textToSpeak = "";
+
+    // 延迟1秒后播放语音
+    setTimeout(function () {
+        // 检查浏览器是否支持Web Speech API
+        if ('speechSynthesis' in window) {
+            // ... existing code ...
+        } else {
+            console.warn('您的浏览器不支持语音合成功能。');
+        }
+    }, 1000);
+    
+    // 暗色模式切换逻辑
+    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+    
+    // 检查本地存储中是否有保存的主题偏好
+    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+
+    if (currentTheme) {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        if (currentTheme === 'dark') {
+            toggleSwitch.checked = true;
+        }
+    }
+
+    // 切换主题函数
+    function switchTheme(e) {
+        if (e.target.checked) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }    
+    }
+
+    // 监听开关变化
+    toggleSwitch.addEventListener('change', switchTheme, false);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 为每个版本卡片添加ID
+    const versionCards = document.querySelectorAll('.version-card');
+    versionCards.forEach(card => {
+        const titleText = card.querySelector('.version-title').textContent;
+        const versionMatch = titleText.match(/v?(\d+\.\d+\.\d+)/);
+        if (versionMatch) {
+            const version = versionMatch[1].replace(/\./g, '-');
+            card.id = `v${version}`;
+        }
+    });
+    
+    // 导航展开/折叠功能
+    const treeNav = document.querySelector('.version-tree-nav');
+    const navTitle = treeNav.querySelector('h3');
+    
+    // 检测是否是移动设备
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    // 点击标题展开/折叠导航
+    if (navTitle) {
+        navTitle.addEventListener('click', function(e) {
+            if (isMobile()) {
+                treeNav.classList.toggle('expanded');
+                e.stopPropagation(); // 阻止事件冒泡
+            }
+        });
+    }
+    
+    // 点击页面其他区域关闭导航
+    document.addEventListener('click', function(e) {
+        if (isMobile() && treeNav.classList.contains('expanded')) {
+            // 检查点击是否在导航区域外
+            if (!treeNav.contains(e.target)) {
+                treeNav.classList.remove('expanded');
+            }
+        }
+    });
+    
+    // 点击导航链接平滑滚动到对应版本
+    const navLinks = document.querySelectorAll('.version-list a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // 阻止事件冒泡
+            
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // 平滑滚动到目标元素
+                window.scrollTo({
+                    top: targetElement.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+                
+                // 更新URL但不刷新页面
+                history.pushState(null, null, `#${targetId}`);
+                
+                // 高亮当前点击的链接
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 移动端点击后延迟关闭导航
+                if (isMobile()) {
+                    setTimeout(() => {
+                        treeNav.classList.remove('expanded');
+                    }, 500);
+                }
+            }
+        });
+    });
+    
+    // 使用滚动事件来检测当前版本
+    function updateActiveLink() {
+        const scrollPosition = window.scrollY;
+        
+        // 找到当前在视口中的版本卡片
+        let currentCard = null;
+        versionCards.forEach(card => {
+            const cardTop = card.offsetTop;
+            const cardHeight = card.offsetHeight;
+            
+            if (scrollPosition >= cardTop - 100 && 
+                scrollPosition < cardTop + cardHeight - 100) {
+                currentCard = card;
+            }
+        });
+        
+        // 更新导航链接高亮
+        if (currentCard) {
+            const currentId = currentCard.id;
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === `#${currentId}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+    }
+    
+    // 监听滚动事件
+    window.addEventListener('scroll', updateActiveLink);
+    
+    // 初始化时执行一次
+    updateActiveLink();
+    
+    // 窗口大小改变时重置导航状态
+    window.addEventListener('resize', function() {
+        if (!isMobile()) {
+            treeNav.classList.remove('expanded');
+        }
+    });
+});
+å
+</script>
+
+</body>
+</html>
